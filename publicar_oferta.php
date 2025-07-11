@@ -159,13 +159,13 @@
             </div>
         </div>
 
-        <!-- Footer -->
+<!-- Footer -->
         <footer style="text-align: center; margin-top: 3rem; padding: 2rem; background: var(--white); border-radius: var(--border-radius); box-shadow: var(--shadow);">
             <p style="color: var(--text-light);">
                 <i class="fas fa-university"></i> Universidad Fidélitas - Sistema de Vinculación Académica
             </p>
             <p style="color: var(--text-light); font-size: 0.9rem;">
-                © 2024 Todos los derechos reservados
+                © 2025 Todos los derechos reservados | Desarrollado con <i class="fas fa-heart" style="color: var(--accent-color);"></i>
             </p>
         </footer>
     </div>

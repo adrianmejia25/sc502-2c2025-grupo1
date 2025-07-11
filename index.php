@@ -125,7 +125,7 @@ $ofertas_activas = $conexion->query("SELECT COUNT(*) as total FROM ofertas WHERE
                 <i class="fas fa-university"></i> Universidad Fidélitas - Sistema de Vinculación Académica
             </p>
             <p style="color: var(--text-light); font-size: 0.9rem;">
-                © 2024 Todos los derechos reservados | Desarrollado con <i class="fas fa-heart" style="color: var(--accent-color);"></i>
+                © 2025 Todos los derechos reservados | Desarrollado con <i class="fas fa-heart" style="color: var(--accent-color);"></i>
             </p>
         </footer>
     </div>
