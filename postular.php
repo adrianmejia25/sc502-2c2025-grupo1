@@ -1,4 +1,4 @@
-<?php include("conexion.php"); ?>
+<?php session_start(); include("conexion.php"); $conexion->set_charset("utf8mb4"); ?>
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -53,7 +53,7 @@
                                 $oferta['descripcion'];
                             
                             echo "<tr>
-                                    <td><strong>#{$oferta['id']}</strong></td>
+                                    <td><strong>#{$oferta['id_oferta']}</strong></td>
                                     <td><strong>" . htmlspecialchars($oferta['titulo']) . "</strong></td>
                                     <td><span class='badge badge-" . strtolower($oferta['modalidad']) . "'>" . ucfirst($oferta['modalidad']) . "</span></td>
                                     <td>" . date('d/m/Y', strtotime($oferta['fecha_inicio'])) . "</td>
@@ -83,7 +83,7 @@
                     echo '<div class="message error"><i class="fas fa-exclamation-triangle"></i> Por favor, complete todos los campos.</div>';
                 } else {
                     // Verificar que el usuario existe
-                    $check_user = $conexion->prepare("SELECT id, rol FROM usuarios WHERE id = ?");
+                    $check_user = $conexion->prepare("SELECT id_usuario, rol FROM usuarios WHERE id_usuario = ?");
                     $check_user->bind_param("i", $id_usuario);
                     $check_user->execute();
                     $user_result = $check_user->get_result();
@@ -94,7 +94,7 @@
                         $user_data = $user_result->fetch_assoc();
                         
                         // Verificar que la oferta existe y está activa
-                        $check_oferta = $conexion->prepare("SELECT id, titulo, fecha_fin FROM ofertas WHERE id = ? AND fecha_fin >= CURDATE()");
+                        $check_oferta = $conexion->prepare("SELECT id_oferta, titulo, fecha_fin FROM ofertas WHERE id_oferta = ? AND fecha_fin >= CURDATE()");
                         $check_oferta->bind_param("i", $id_oferta);
                         $check_oferta->execute();
                         $oferta_result = $check_oferta->get_result();
@@ -105,7 +105,7 @@
                             $oferta_data = $oferta_result->fetch_assoc();
                             
                             // Verificar que no se haya postulado antes
-                            $check_postulacion = $conexion->prepare("SELECT id FROM postulaciones WHERE id_usuario = ? AND id_oferta = ?");
+                            $check_postulacion = $conexion->prepare("SELECT id_postulacion FROM postulaciones WHERE id_usuario = ? AND id_oferta = ?");
                             $check_postulacion->bind_param("ii", $id_usuario, $id_oferta);
                             $check_postulacion->execute();
                             $postulacion_result = $check_postulacion->get_result();
@@ -131,10 +131,26 @@
             <form method="post" class="fade-in">
                 <div class="form-group">
                     <label for="id_usuario"><i class="fas fa-user"></i> ID de Estudiante</label>
-                    <input type="number" name="id_usuario" id="id_usuario" placeholder="Ingrese su ID de estudiante" required min="1">
+                    <input type="number" name="id_usuario" id="id_usuario"
+                    value="<?php echo $_SESSION['id_usuario'] ?? ''; ?>"
+                    <?php echo isset($_SESSION['id_usuario']) ? 'readonly' : ''; ?>
+                    placeholder="Ingrese su ID de estudiante" required min="1">
                     <small style="color: var(--text-light); font-size: 0.8rem;">
                         <i class="fas fa-info-circle"></i> Si no conoce su ID, consulte con el administrador del sistema
                     </small>
+
+                                    </div> <!-- cierra form-group de id_usuario -->
+
+                <div class="form-group">
+                    <label for="id_oferta"><i class="fas fa-briefcase"></i> ID de la Oferta</label>
+                    <input type="number" name="id_oferta" id="id_oferta"
+                           placeholder="ID de la oferta a postular" required min="1">
+                </div>
+
+                <button type="submit" name="postular" class="btn-primary">
+                    <i class="fas fa-paper-plane"></i> Postular
+                </button>
+            </form>
 
 <!-- Footer -->
         <footer style="text-align: center; margin-top: 3rem; padding: 2rem; background: var(--white); border-radius: var(--border-radius); box-shadow: var(--shadow);">

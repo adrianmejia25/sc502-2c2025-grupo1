@@ -43,7 +43,7 @@
                     echo '<div class="message error"><i class="fas fa-exclamation-triangle"></i> Por favor, complete todos los campos obligatorios.</div>';
                 } else {
                     // Verificar si el correo ya existe
-                    $check_email = $conexion->prepare("SELECT id FROM usuarios WHERE correo = ?");
+                    $check_email = $conexion->prepare("SELECT id_usuario FROM usuarios WHERE correo = ? LIMIT 1");
                     $check_email->bind_param("s", $correo);
                     $check_email->execute();
                     $result = $check_email->get_result();
@@ -54,7 +54,7 @@
                         // Hash de la contraseña
                         $contrasena_hash = password_hash($contrasena, PASSWORD_DEFAULT);
                         
-                        $stmt = $conexion->prepare("INSERT INTO usuarios(nombre, correo, contraseña, rol) VALUES (?, ?, ?, ?)");
+                        $stmt = $conexion->prepare("INSERT INTO usuarios (nombre, correo, `contraseña`, rol) VALUES (?, ?, ?, ?)");
                         $stmt->bind_param("ssss", $nombre, $correo, $contrasena_hash, $rol);
                         
                         if ($stmt->execute()) {

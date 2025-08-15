@@ -40,14 +40,14 @@ if (isset($_POST['guardar'])) {
             $mensaje = 'No tienes permisos para crear bitácora para esta postulación.';
             $tipo_mensaje = 'error';
         } else {
-            try {
-                $stmt = $conexion->prepare("INSERT INTO bitacoras(id_postulacion, observaciones, horas_realizadas, fecha, id_usuario) VALUES (?, ?, ?, ?, ?)");
-                $stmt->bind_param("isiis", $id_postulacion, $observaciones, $horas_realizadas, $fecha, $_SESSION['id_usuario']);
-                $stmt->execute();
+            // INSERT correcto en bitacoras (sin id_usuario)
+            $stmt = $conexion->prepare("INSERT INTO bitacoras (id_postulacion, observaciones, horas_realizadas, fecha) VALUES (?, ?, ?, ?)");
+            $stmt->bind_param("isis", $id_postulacion, $observaciones, $horas_realizadas, $fecha);
+            if ($stmt->execute()) {
                 $mensaje = 'Bitácora guardada exitosamente.';
                 $tipo_mensaje = 'success';
-            } catch (Exception $e) {
-                $mensaje = 'Error al guardar la bitácora. Intenta nuevamente.';
+            } else {
+                $mensaje = 'Error al guardar: ' . $stmt->error;
                 $tipo_mensaje = 'error';
             }
         }
@@ -57,7 +57,7 @@ if (isset($_POST['guardar'])) {
 // Obtener las postulaciones del usuario
 $postulaciones_usuario = $conexion->prepare("SELECT p.*, o.titulo FROM postulaciones p 
                                             JOIN ofertas o ON p.id_oferta = o.id_oferta 
-                                            WHERE p.id_usuario = ? AND p.estado = 'aceptada'");
+                                            WHERE p.id_usuario = ? AND p.estado IN ('aceptada', 'pendiente')");
 $postulaciones_usuario->bind_param("i", $_SESSION['id_usuario']);
 $postulaciones_usuario->execute();
 $postulaciones_result = $postulaciones_usuario->get_result();
@@ -184,7 +184,7 @@ $postulaciones_result = $postulaciones_usuario->get_result();
                                                         FROM bitacoras b 
                                                         JOIN postulaciones p ON b.id_postulacion = p.id_postulacion 
                                                         JOIN ofertas o ON p.id_oferta = o.id_oferta 
-                                                        WHERE b.id_usuario = ? 
+                                                        WHERE p.id_usuario = ?
                                                         ORDER BY b.fecha DESC");
                         $bitacoras->bind_param("i", $_SESSION['id_usuario']);
                         $bitacoras->execute();

@@ -1,4 +1,8 @@
-<?php include("conexion.php"); ?>
+<?php
+session_start();
+include("conexion.php");
+$conexion->set_charset("utf8mb4");
+?>
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -36,12 +40,12 @@
                 // Validación básica
                 $titulo = trim($_POST['titulo']);
                 $descripcion = trim($_POST['descripcion']);
-                $modalidad = $_POST['modalidad'];
+                $modalidad = strtolower($_POST['modalidad'] ?? '');
                 $fecha_inicio = $_POST['fecha_inicio'];
                 $fecha_fin = $_POST['fecha_fin'];
-                $id_usuario = $_POST['id_usuario'];
+                $id_usuario = $_SESSION['id_usuario'] ?? intval($_POST['id_usuario'] ?? 0);
                 
-                if (empty($titulo) || empty($fecha_inicio) || empty($fecha_fin) || empty($id_usuario)) {
+                if (empty($titulo) || empty($fecha_inicio) || empty($fecha_fin) || !$id_usuario) {
                     echo '<div class="message error"><i class="fas fa-exclamation-triangle"></i> Por favor, complete todos los campos obligatorios.</div>';
                 } elseif (strtotime($fecha_inicio) >= strtotime($fecha_fin)) {
                     echo '<div class="message error"><i class="fas fa-exclamation-triangle"></i> La fecha de fin debe ser posterior a la fecha de inicio.</div>';
@@ -49,7 +53,7 @@
                     echo '<div class="message error"><i class="fas fa-exclamation-triangle"></i> La fecha de inicio no puede ser anterior a hoy.</div>';
                 } else {
                     // Verificar que el usuario existe
-                    $check_user = $conexion->prepare("SELECT id FROM usuarios WHERE id = ?");
+                    $check_user = $conexion->prepare("SELECT id_usuario FROM usuarios WHERE id_usuario = ? AND rol='empresa'");
                     $check_user->bind_param("i", $id_usuario);
                     $check_user->execute();
                     $result = $check_user->get_result();
@@ -111,7 +115,10 @@
                 
                 <div class="form-group">
                     <label for="id_usuario"><i class="fas fa-user"></i> ID Usuario Empresa</label>
-                    <input type="number" name="id_usuario" id="id_usuario" placeholder="Ingrese su ID de usuario" required min="1">
+                    <input type="number" name="id_usuario" id="id_usuario"
+                    value="<?php echo $_SESSION['id_usuario'] ?? ''; ?>"
+                    <?php echo isset($_SESSION['id_usuario']) ? 'readonly' : ''; ?>
+                    placeholder="ID de la empresa" required min="1">
                 </div>
                 
                 <button type="submit" name="publicar" class="btn-primary">

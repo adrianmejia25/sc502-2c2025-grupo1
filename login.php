@@ -1,11 +1,12 @@
 <?php
 session_start();
 include("conexion.php");
+$conexion->set_charset("utf8mb4");
 
 $mensaje = '';
 $tipo_mensaje = '';
 
-if (isset($_POST['login'])) {
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $correo = filter_var($_POST['correo'], FILTER_SANITIZE_EMAIL);
     $contrasena = $_POST['contrasena'];
     
@@ -14,7 +15,7 @@ if (isset($_POST['login'])) {
         $tipo_mensaje = 'error';
     } else {
         // Usar prepared statements para prevenir SQL injection
-        $stmt = $conexion->prepare("SELECT * FROM usuarios WHERE correo = ?");
+        $stmt = $conexion->prepare("SELECT id_usuario, nombre, correo, rol, `contraseña` FROM usuarios WHERE correo = ? LIMIT 1");
         $stmt->bind_param("s", $correo);
         $stmt->execute();
         $resultado = $stmt->get_result();
@@ -24,7 +25,11 @@ if (isset($_POST['login'])) {
             
             // En un sistema real, deberías usar password_verify() con contraseñas hasheadas
             // Por ahora mantenemos compatibilidad con tu sistema actual
-            if ($usuario['contraseña'] == $contrasena) {
+            $hash = $usuario['contraseña'] ?? '';
+            $esValida = preg_match('/^\$2y\$/', (string)$hash) ? password_verify($contrasena, $hash)
+            : hash_equals((string)$hash, (string)$contrasena);
+
+            if ($esValida) {
                 $_SESSION['usuario'] = $usuario['nombre'];
                 $_SESSION['id_usuario'] = $usuario['id_usuario'];
                 $_SESSION['rol'] = $usuario['rol'];
