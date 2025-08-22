@@ -38,8 +38,11 @@
                 $correo = trim($_POST['correo']);
                 $contrasena = $_POST['contrasena'];
                 $rol = $_POST['rol'];
-                
-                if (empty($nombre) || empty($correo) || empty($contrasena)) {
+
+                // Expresión regular para aceptar solo gmail, outlook y yahoo
+                if (!preg_match('/^[\w\.-]+@(gmail\.com|outlook\.com|yahoo\.com)$/i', $correo)) {
+                    echo '<div class="message error"><i class="fas fa-exclamation-triangle"></i> Solo se permiten correos de Gmail, Outlook o Yahoo.</div>';
+                } elseif (empty($nombre) || empty($correo) || empty($contrasena)) {
                     echo '<div class="message error"><i class="fas fa-exclamation-triangle"></i> Por favor, complete todos los campos obligatorios.</div>';
                 } else {
                     // Verificar si el correo ya existe
@@ -87,15 +90,9 @@
                     <label for="rol"><i class="fas fa-user-tag"></i> Tipo de Usuario</label>
                     <select name="rol" id="rol" required>
                         <option value="">Seleccione su rol</option>
-                        <option value="estudiante">
-                            <i class="fas fa-graduation-cap"></i> Estudiante
-                        </option>
-                        <option value="empresa">
-                            <i class="fas fa-building"></i> Empresa
-                        </option>
-                        <option value="academico">
-                            <i class="fas fa-chalkboard-teacher"></i> Académico
-                        </option>
+                        <option value="estudiante">Estudiante</option>
+                        <option value="empresa">Empresa</option>
+                        <option value="academico">Académico</option>
                     </select>
                 </div>
                 
@@ -109,21 +106,6 @@
             </div>
         </div>
 
-        <!-- Información adicional -->
-        <div class="grid fade-in">
-            <div class="card">
-                <h3><i class="fas fa-graduation-cap"></i> Para Estudiantes</h3>
-                <p>Accede a oportunidades de prácticas profesionales, proyectos de vinculación y empleos que complementen tu formación académica.</p>
-            </div>
-            <div class="card">
-                <h3><i class="fas fa-building"></i> Para Empresas</h3>
-                <p>Conecta con talento universitario para proyectos, prácticas y oportunidades laborales que impulsen tu organización.</p>
-            </div>
-            <div class="card">
-                <h3><i class="fas fa-chalkboard-teacher"></i> Para Académicos</h3>
-                <p>Supervisa y gestiona los procesos de vinculación de tus estudiantes con el sector productivo.</p>
-            </div>
-        </div>
         <!-- Footer -->
         <footer style="text-align: center; margin-top: 3rem; padding: 2rem; background: var(--white); border-radius: var(--border-radius); box-shadow: var(--shadow);">
             <p style="color: var(--text-light);">
@@ -147,9 +129,20 @@
             });
         });
 
-        // Validación del formulario
+        // Validación extra en el cliente
         document.querySelector('form').addEventListener('submit', function(e) {
+            const correo = document.getElementById('correo').value;
             const password = document.getElementById('contrasena').value;
+
+            // Solo Gmail, Outlook o Yahoo
+            const regexCorreo = /^[\w\.-]+@(gmail\.com|outlook\.com|yahoo\.com)$/i;
+
+            if (!regexCorreo.test(correo)) {
+                e.preventDefault();
+                alert("Solo se permiten correos de Gmail, Outlook o Yahoo.");
+                return;
+            }
+
             if (password.length < 6) {
                 e.preventDefault();
                 alert('La contraseña debe tener al menos 6 caracteres');

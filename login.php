@@ -24,7 +24,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $usuario = $resultado->fetch_assoc();
             
             // En un sistema real, deberías usar password_verify() con contraseñas hasheadas
-            // Por ahora mantenemos compatibilidad con tu sistema actual
             $hash = $usuario['contraseña'] ?? '';
             $esValida = preg_match('/^\$2y\$/', (string)$hash) ? password_verify($contrasena, $hash)
             : hash_equals((string)$hash, (string)$contrasena);
@@ -187,6 +186,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             // Validación del formulario
             const form = document.getElementById('loginForm');
             const loginBtn = document.getElementById('loginBtn');
+
+            // Nueva función para validar correos
+            function validarCorreo(correo) {
+                const regex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.(com|org|net|edu|ac\.cr|es|mx)$/i;
+                return regex.test(correo);
+            }
             
             form.addEventListener('submit', function(e) {
                 const correo = document.getElementById('correo').value;
@@ -195,6 +200,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 if (!correo || !contrasena) {
                     e.preventDefault();
                     alert('Por favor, completa todos los campos.');
+                    return;
+                }
+
+                // Validación de correo antes de enviar
+                if (!validarCorreo(correo)) {
+                    e.preventDefault();
+                    alert('⚠️ Correo inválido. Debe terminar en .com, .org, .net, .edu, .ac.cr, etc.');
                     return;
                 }
                 
