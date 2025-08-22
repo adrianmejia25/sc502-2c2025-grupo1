@@ -10,6 +10,7 @@ $ofertas_activas = $conexion->query("SELECT COUNT(*) as total FROM ofertas WHERE
 ?>
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -17,6 +18,7 @@ $ofertas_activas = $conexion->query("SELECT COUNT(*) as total FROM ofertas WHERE
     <link rel="stylesheet" href="estilos.css">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
 </head>
+
 <body>
     <div class="container">
         <!-- Header -->
@@ -31,14 +33,15 @@ $ofertas_activas = $conexion->query("SELECT COUNT(*) as total FROM ofertas WHERE
         <nav class="slide-in">
             <?php if (isset($_SESSION['usuario'])): ?>
                 <span style="color: var(--success-color); font-weight: bold;">
-                    <i class="fas fa-user"></i> Bienvenido, <?php echo htmlspecialchars($_SESSION['usuario']); ?>
+                    <i class="fas fa-user"></i>
+                    Bienvenido, <?= htmlspecialchars($_SESSION['usuario']) ?>
                 </span>
                 <a href="logout.php"><i class="fas fa-sign-out-alt"></i> Cerrar Sesión</a>
             <?php else: ?>
                 <a href="registro.php"><i class="fas fa-user-plus"></i> Registro</a>
                 <a href="login.php"><i class="fas fa-sign-in-alt"></i> Iniciar Sesión</a>
             <?php endif; ?>
-            
+
             <a href="publicar_oferta.php"><i class="fas fa-briefcase"></i> Publicar Oferta</a>
             <a href="postular.php"><i class="fas fa-paper-plane"></i> Postular</a>
             <a href="bitacora.php"><i class="fas fa-book"></i> Bitácora</a>
@@ -47,22 +50,26 @@ $ofertas_activas = $conexion->query("SELECT COUNT(*) as total FROM ofertas WHERE
         <!-- Estadísticas -->
         <section class="grid fade-in">
             <div class="card text-center">
-                <i class="fas fa-users" style="font-size: 2rem; color: var(--secondary-color); margin-bottom: 1rem;"></i>
+                <i class="fas fa-users"
+                    style="font-size: 2rem; color: var(--secondary-color); margin-bottom: 1rem;"></i>
                 <h3><?php echo $total_usuarios; ?></h3>
                 <p>Usuarios Registrados</p>
             </div>
             <div class="card text-center">
-                <i class="fas fa-briefcase" style="font-size: 2rem; color: var(--success-color); margin-bottom: 1rem;"></i>
+                <i class="fas fa-briefcase"
+                    style="font-size: 2rem; color: var(--success-color); margin-bottom: 1rem;"></i>
                 <h3><?php echo $ofertas_activas; ?></h3>
                 <p>Ofertas Activas</p>
             </div>
             <div class="card text-center">
-                <i class="fas fa-handshake" style="font-size: 2rem; color: var(--warning-color); margin-bottom: 1rem;"></i>
+                <i class="fas fa-handshake"
+                    style="font-size: 2rem; color: var(--warning-color); margin-bottom: 1rem;"></i>
                 <h3><?php echo $total_postulaciones; ?></h3>
                 <p>Postulaciones Enviadas</p>
             </div>
             <div class="card text-center">
-                <i class="fas fa-chart-line" style="font-size: 2rem; color: var(--accent-color); margin-bottom: 1rem;"></i>
+                <i class="fas fa-chart-line"
+                    style="font-size: 2rem; color: var(--accent-color); margin-bottom: 1rem;"></i>
                 <h3><?php echo $total_ofertas; ?></h3>
                 <p>Total de Ofertas</p>
             </div>
@@ -106,33 +113,40 @@ $ofertas_activas = $conexion->query("SELECT COUNT(*) as total FROM ofertas WHERE
         <section class="grid fade-in">
             <div class="card">
                 <h3><i class="fas fa-info-circle"></i> ¿Qué es el Sistema de Vinculación?</h3>
-                <p>Nuestro sistema conecta estudiantes universitarios con empresas y organizaciones para realizar prácticas profesionales, proyectos de vinculación y oportunidades de empleo.</p>
+                <p>Nuestro sistema conecta estudiantes universitarios con empresas y organizaciones para realizar
+                    prácticas profesionales, proyectos de vinculación y oportunidades de empleo.</p>
             </div>
             <div class="card">
                 <h3><i class="fas fa-rocket"></i> Beneficios</h3>
                 <ul style="list-style: none; padding: 0;">
-                    <li style="margin: 0.5rem 0;"><i class="fas fa-check" style="color: var(--success-color);"></i> Experiencia práctica real</li>
-                    <li style="margin: 0.5rem 0;"><i class="fas fa-check" style="color: var(--success-color);"></i> Networking profesional</li>
-                    <li style="margin: 0.5rem 0;"><i class="fas fa-check" style="color: var(--success-color);"></i> Desarrollo de competencias</li>
-                    <li style="margin: 0.5rem 0;"><i class="fas fa-check" style="color: var(--success-color);"></i> Oportunidades laborales</li>
+                    <li style="margin: 0.5rem 0;"><i class="fas fa-check" style="color: var(--success-color);"></i>
+                        Experiencia práctica real</li>
+                    <li style="margin: 0.5rem 0;"><i class="fas fa-check" style="color: var(--success-color);"></i>
+                        Networking profesional</li>
+                    <li style="margin: 0.5rem 0;"><i class="fas fa-check" style="color: var(--success-color);"></i>
+                        Desarrollo de competencias</li>
+                    <li style="margin: 0.5rem 0;"><i class="fas fa-check" style="color: var(--success-color);"></i>
+                        Oportunidades laborales</li>
                 </ul>
             </div>
         </section>
 
         <!-- Footer -->
-        <footer style="text-align: center; margin-top: 3rem; padding: 2rem; background: var(--white); border-radius: var(--border-radius); box-shadow: var(--shadow);">
+        <footer
+            style="text-align: center; margin-top: 3rem; padding: 2rem; background: var(--white); border-radius: var(--border-radius); box-shadow: var(--shadow);">
             <p style="color: var(--text-light);">
                 <i class="fas fa-university"></i> Universidad Fidélitas - Sistema de Vinculación Académica
             </p>
             <p style="color: var(--text-light); font-size: 0.9rem;">
-                © 2025 Todos los derechos reservados | Desarrollado con <i class="fas fa-heart" style="color: var(--accent-color);"></i>
+                © 2025 Todos los derechos reservados | Desarrollado con <i class="fas fa-heart"
+                    style="color: var(--accent-color);"></i>
             </p>
         </footer>
     </div>
 
     <script>
         // Agregar animaciones cuando la página carga
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', function () {
             const fadeElements = document.querySelectorAll('.fade-in');
             fadeElements.forEach((element, index) => {
                 setTimeout(() => {
@@ -175,4 +189,5 @@ $ofertas_activas = $conexion->query("SELECT COUNT(*) as total FROM ofertas WHERE
         }
     </style>
 </body>
+
 </html>
